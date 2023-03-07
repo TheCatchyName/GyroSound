@@ -18,10 +18,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.getSystemService
-import kotlin.math.abs
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.sqrt
+import kotlin.math.*
 import kotlin.properties.Delegates
 
 // TODO: Rename parameter arguments, choose names that match
@@ -43,6 +40,7 @@ private var orientation = FloatArray(3)
 private var mGeomagnetic = FloatArray(9)
 private var mGravity = FloatArray(9)
 private var roll = 0.0f
+private var base = 1.25f
 
 /**
  * A simple [Fragment] subclass.
@@ -75,7 +73,7 @@ class KeyFragment : Fragment(), View.OnTouchListener, SensorEventListener {
 
         val buttonPlay = requireActivity().findViewById<Button>(R.id.buttonPlay)
         soundPool = SoundPool(6, AudioManager.STREAM_MUSIC, 0)
-        soundPool!!.load(activity?.applicationContext, R.raw.key01, 1)
+        soundPool!!.load(activity?.applicationContext, R.raw.violinc4, 1)
         buttonPlay.setOnTouchListener(this)
         sensorManager = activity?.getSystemService(SENSOR_SERVICE) as SensorManager
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
@@ -85,9 +83,9 @@ class KeyFragment : Fragment(), View.OnTouchListener, SensorEventListener {
 
     override fun onResume() {
         super.onResume()
-        sensorManager.registerListener(this, gyroscope,SensorManager.SENSOR_DELAY_NORMAL)
-        sensorManager.registerListener(this, accelerometer,SensorManager.SENSOR_DELAY_NORMAL)
-        sensorManager.registerListener(this, magnetometer,SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(this, gyroscope,500000)
+        sensorManager.registerListener(this, accelerometer,500000)
+        sensorManager.registerListener(this, magnetometer,500000)
     }
 
     override fun onPause() {
@@ -124,7 +122,7 @@ class KeyFragment : Fragment(), View.OnTouchListener, SensorEventListener {
                 activity?.findViewById<TextView>(R.id.azimuthDisplay)?.text = "pitch: $pitch"
                 activity?.findViewById<TextView>(R.id.azimuthDisplay)?.text = "roll: $roll"
                 if (streamId > 0) {
-                    soundPool.setRate(streamId, abs(roll))
+                    soundPool.setRate(streamId, base.pow(roll))
                 }
             }
         }

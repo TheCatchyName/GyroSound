@@ -10,6 +10,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         var soundPool = SoundPool(6, AudioManager.STREAM_MUSIC, 0)
-        soundPool!!.load(this, R.raw.key01, 1)
+        soundPool!!.load(this, R.raw.key02, 1)
     }
 }

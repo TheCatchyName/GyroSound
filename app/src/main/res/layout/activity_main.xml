@@ -14,4 +14,16 @@
         tools:layout="@layout/fragment_key"
         />
 
+    <TextView
+        android:id="@+id/gyroscopeDisplay"
+        android:layout_width="238dp"
+        android:layout_height="132dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.405"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.835" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

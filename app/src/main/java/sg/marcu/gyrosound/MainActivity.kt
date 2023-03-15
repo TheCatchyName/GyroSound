@@ -1,5 +1,6 @@
 package sg.marcu.gyrosound
 
+import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -8,7 +9,10 @@ import android.media.AudioManager
 import android.media.SoundPool
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import kotlin.math.pow
 import kotlin.properties.Delegates
 
@@ -33,6 +37,8 @@ private var z = 0.0f
 private var base = 1.25f
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
+    private var keySounds: HashMap<Int, Int> = hashMapOf(0 to R.raw.key01)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -42,6 +48,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+
+        var count = 0
+        supportFragmentManager.fragments.forEach {k ->
+            keySounds.put(count, R.raw.key01)
+        }
     }
 
 
@@ -91,5 +102,17 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
+    }
+
+    private val getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+        if (it.resultCode == RESULT_OK){
+            keySounds = it.data!!.getSerializableExtra("sounds") as HashMap<Int, Int>
+        }
+    }
+
+    fun goToEditMode(view: View) {
+        val it = Intent(this, EditSound::class.java)
+        it.putExtra("sounds", keySounds)
+        getResult.launch(it)
     }
 }

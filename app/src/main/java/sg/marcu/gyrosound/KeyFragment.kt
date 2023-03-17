@@ -1,25 +1,16 @@
 package sg.marcu.gyrosound
 
-import android.content.Context.SENSOR_SERVICE
-import android.content.Intent
-import android.content.res.Configuration
-import android.graphics.Color
-import android.hardware.*
 import android.media.AudioManager
-import android.media.MediaPlayer
 import android.media.SoundPool
 import android.os.Bundle
-import android.util.Half.EPSILON
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.getSystemService
+import java.io.File
 import kotlin.math.*
-import kotlin.properties.Delegates
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,17 +24,13 @@ private var streamId = 0
  * Use the [KeyFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class KeyFragment : Fragment(), View.OnTouchListener {
+class KeyFragment: Fragment(), View.OnTouchListener {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var soundId: Int = 0
+    private var soundFile: File? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -57,22 +44,34 @@ class KeyFragment : Fragment(), View.OnTouchListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        soundFile = (activity as MainActivity).getSoundFile(this.id)
+
         val buttonPlay = requireActivity().findViewById<Button>(R.id.buttonPlay)
         soundPool = SoundPool(6, AudioManager.STREAM_MUSIC, 0)
-        soundPool!!.load(activity?.applicationContext, R.raw.violinc4, 1)
+        soundId = soundPool!!.load(soundFile?.absolutePath ?: "", 1)
         buttonPlay.setOnTouchListener(this)
     }
 
 
     override fun onTouch(v: View?, event: MotionEvent): Boolean {
-        var soundId = 1
         if (event.getAction()== MotionEvent.ACTION_DOWN) {
-//            streamId = soundPool.play(soundId, 1F, 1F, 0, -1, abs(roll))
+            val tempSoundFile = (activity as MainActivity).getSoundFile(this.id)
+            if (soundFile != tempSoundFile){
+                soundFile = tempSoundFile
+                soundId = soundPool!!.load(soundFile?.absolutePath ?: "", 1)
+            }
+            streamId = soundPool.play(soundId, 1F, 1F, 0, -1, abs(roll))
         }
         if(event.getAction()==MotionEvent.ACTION_UP){
             soundPool.stop(streamId)
         }
         return true
+    }
+
+    companion object {
+        fun newInstance(soundFile: File): KeyFragment {
+            return KeyFragment()
+        }
     }
 
 //    companion object {

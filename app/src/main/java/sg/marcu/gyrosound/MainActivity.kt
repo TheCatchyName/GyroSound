@@ -5,15 +5,16 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.media.AudioManager
-import android.media.SoundPool
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
-import kotlin.math.pow
+import java.io.File
+import java.io.FileOutputStream
+import kotlin.collections.HashMap
 import kotlin.properties.Delegates
 
 private lateinit var sensorManager: SensorManager
@@ -28,7 +29,7 @@ private var iMatrix = FloatArray(9)
 private var orientation = FloatArray(3)
 private var mGeomagnetic = FloatArray(9)
 private var mGravity = FloatArray(9)
-private var roll = 0.0f
+var roll = 0.0f
 private var azimuth = 0.0f
 private var pitch = 0.0f
 private var x = 0.0f
@@ -36,23 +37,59 @@ private var y = 0.0f
 private var z = 0.0f
 private var base = 1.25f
 
+private var SOUND_1 = 0
+private var SOUND_2 = 1
+private var SOUND_3 = 2
+private var SOUND_4 = 3
+
 class MainActivity : AppCompatActivity(), SensorEventListener {
-    private var keySounds: HashMap<Int, Int> = hashMapOf(0 to R.raw.key01)
+    private var sounds: HashMap<Int, File> = hashMapOf()
+    private var keySounds: HashMap<Int, Int> = hashMapOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        var soundPool = SoundPool(6, AudioManager.STREAM_MUSIC, 0)
-        soundPool!!.load(this, R.raw.key02, 1)
+        //var soundPool = SoundPool(6, AudioManager.STREAM_MUSIC, 0)
+        //soundPool!!.load(this, R.raw.key02, 1)
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
 
-        var count = 0
+        writeRawFileToExternal("key01.mp3", R.raw.key01)
+        writeRawFileToExternal("key02.mp3", R.raw.key02)
+        writeRawFileToExternal("violinc4.mp3", R.raw.violinc4)
+
+        /*
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.root_layout, KeyFragment.newInstance(sounds[SOUND_2]!!))
+            .commit()
+        */
         supportFragmentManager.fragments.forEach {k ->
-            keySounds.put(count, R.raw.key01)
+            keySounds[k.id] = SOUND_2
         }
+    }
+
+    fun writeRawFileToExternal(filename: String, rawFileID: Int) {
+        val audioDir = File(getExternalFilesDir(Environment.DIRECTORY_MUSIC), "AudioMemos")
+        audioDir.mkdirs()
+        val audioDirPath: String = audioDir.getAbsolutePath()
+        val recordingFile = File("$audioDirPath/$filename")
+
+        val outputStream = FileOutputStream(recordingFile)
+        val buffer = ByteArray(8192)
+        var length: Int
+        val fis = resources.openRawResource(rawFileID)
+
+        while (fis.read(buffer).also{length = it} > 0){
+            outputStream.write(buffer, 0, length)
+        }
+        outputStream.flush()
+        outputStream.close()
+        fis.close()
+
+        sounds[sounds.size] = recordingFile
     }
 
 
@@ -113,6 +150,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     fun goToEditMode(view: View) {
         val it = Intent(this, EditSound::class.java)
         it.putExtra("sounds", keySounds)
+        it.putExtra("soundFiles", sounds)
         getResult.launch(it)
+    }
+
+    fun getSoundFile(id: Int): File? {
+        return sounds[keySounds[id]]
     }
 }

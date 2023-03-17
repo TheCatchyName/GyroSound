@@ -1,7 +1,6 @@
 package sg.marcu.gyrosound
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
@@ -27,11 +26,10 @@ import androidx.fragment.app.Fragment
 import java.io.File
 import java.io.IOException
 import java.util.*
+import kotlin.collections.HashMap
 
 
-class EditKeyFragment(private var keyId: Int, private var currSoundName: String) : Fragment() {
-    private var soundsNames: List<String> = R.raw::class.java.declaredFields.map { k -> k.name }
-    private var soundsIds: Map<String, Int> = R.raw::class.java.declaredFields.map { k -> k.name to k.getInt(k) }.toMap()
+class EditKeyFragment(private var keyId: Int, private var currSoundId: Int, private var soundFiles: HashMap<Int, File>) : Fragment() {
     private lateinit var spinnerAdapterInstance: ArrayAdapter<String>
     lateinit var pickedSound: String
 
@@ -45,8 +43,13 @@ class EditKeyFragment(private var keyId: Int, private var currSoundName: String)
 
     companion object {
 
-        fun newInstance(keyId: Int, currSoundName: String): EditKeyFragment {
-            return EditKeyFragment(keyId, currSoundName)
+        fun newInstance(
+            keyId: Int,
+            currSoundName: Int,
+            soundFiles: HashMap<Int, File>,
+            toString: String
+        ): EditKeyFragment {
+            return EditKeyFragment(keyId, currSoundName, soundFiles)
         }
     }
 
@@ -66,11 +69,11 @@ class EditKeyFragment(private var keyId: Int, private var currSoundName: String)
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onStart() {
         super.onStart()
-        spinnerAdapterInstance = ArrayAdapter<String>(requireActivity().applicationContext, android.R.layout.simple_spinner_item, soundsNames)
+        spinnerAdapterInstance = ArrayAdapter<String>(requireActivity().applicationContext, android.R.layout.simple_spinner_item, soundFiles.map{k -> k.value.toString().split("/")[k.value.toString().split("/").size - 1]})
         val spinner = requireActivity().findViewById<Spinner>(R.id.sound_spinner)
         spinner.adapter = spinnerAdapterInstance
 
-        spinner.setSelection(spinnerAdapterInstance.getPosition(currSoundName))
+        spinner.setSelection(currSoundId)
 
         spinner.onItemSelectedListener = object: OnItemSelectedListener{
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -82,7 +85,7 @@ class EditKeyFragment(private var keyId: Int, private var currSoundName: String)
                     pickedSound = p0.getItemAtPosition(p2).toString()
                     parentFragmentManager.setFragmentResult("requestKey", bundleOf(
                         "keyId" to keyId,
-                        "soundId" to soundsIds[pickedSound]
+                        "soundId" to p2
                     ))
                 }
             }
@@ -112,13 +115,16 @@ class EditKeyFragment(private var keyId: Int, private var currSoundName: String)
             mediaRecorder?.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             mediaRecorder?.setOutputFile(recordingFile)
         }
+        else{
+            val permissions = arrayOf(android.Manifest.permission.RECORD_AUDIO, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+            ActivityCompat.requestPermissions(requireActivity(), permissions,0)
+        }
 
         recordButton = requireActivity().findViewById<Button>(R.id.record_button)
         recordButton.setOnClickListener{view: View -> recordAudio(view)}
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String?>,

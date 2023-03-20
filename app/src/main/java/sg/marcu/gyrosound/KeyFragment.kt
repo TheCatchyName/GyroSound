@@ -16,8 +16,10 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.getSystemService
+import androidx.fragment.app.viewModels
 import kotlin.math.*
 import kotlin.properties.Delegates
 
@@ -25,8 +27,6 @@ import kotlin.properties.Delegates
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-private lateinit var soundPool: SoundPool
-private var streamId = 0
 
 /**
  * A simple [Fragment] subclass.
@@ -34,6 +34,7 @@ private var streamId = 0
  * create an instance of this fragment.
  */
 class KeyFragment : Fragment(), View.OnTouchListener {
+    private val viewModel: MainActivityViewModel by viewModels()
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -44,6 +45,7 @@ class KeyFragment : Fragment(), View.OnTouchListener {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        viewModel.setSoundId(   1, 1)
     }
 
     override fun onCreateView(
@@ -58,8 +60,6 @@ class KeyFragment : Fragment(), View.OnTouchListener {
         super.onActivityCreated(savedInstanceState)
 
         val buttonPlay = requireActivity().findViewById<Button>(R.id.buttonPlay)
-        soundPool = SoundPool(6, AudioManager.STREAM_MUSIC, 0)
-        soundPool!!.load(activity?.applicationContext, R.raw.violinc4, 1)
         buttonPlay.setOnTouchListener(this)
     }
 
@@ -67,13 +67,19 @@ class KeyFragment : Fragment(), View.OnTouchListener {
     override fun onTouch(v: View?, event: MotionEvent): Boolean {
         var soundId = 1
         if (event.getAction()== MotionEvent.ACTION_DOWN) {
-//            streamId = soundPool.play(soundId, 1F, 1F, 0, -1, abs(roll))
+//            streamId = soundPool.play(soundId, 1F, 1F, 0, -1, 1f)
+            viewModel.playSound(1)
+            v!!.findViewById<Button>(R.id.buttonPlay).text = "PRESSED"
         }
         if(event.getAction()==MotionEvent.ACTION_UP){
-            soundPool.stop(streamId)
+//            soundPool.stop(streamId)
+            viewModel.pauseSound(1)
+            v!!.findViewById<Button>(R.id.buttonPlay).text = "PRESS ME"
         }
         return true
     }
+
+
 
 //    companion object {
 //        /**

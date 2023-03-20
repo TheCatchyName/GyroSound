@@ -33,6 +33,7 @@ private var x = 0.0f
 private var y = 0.0f
 private var z = 0.0f
 private var base = 1.25f
+var sounds: HashMap<Int, File> = hashMapOf() //maps soundid to soundfile
 
 private var SOUND_1 = 0
 private var SOUND_2 = 1
@@ -41,8 +42,7 @@ private var SOUND_4 = 3
 
 class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
     private val viewModel: MainActivityViewModel by viewModels()
-    private var sounds: HashMap<Int, File> = hashMapOf()
-    private var keySounds: HashMap<Int, Int> = hashMapOf()
+    private var keySounds: HashMap<Int, Int> = hashMapOf() //maps button to value soundid
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

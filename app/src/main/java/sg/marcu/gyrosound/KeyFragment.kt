@@ -45,7 +45,7 @@ class KeyFragment: Fragment(), View.OnTouchListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        soundFile = (activity as MainActivity).getSoundFile(this.id)
+//        soundFile = (activity as MainActivity).getSoundFile(this.id)
 
         val buttonPlay = requireActivity().findViewById<Button>(R.id.buttonPlay)
 //        soundId = soundPool!!.load(soundFile?.absolutePath ?: "", 1)
@@ -55,15 +55,17 @@ class KeyFragment: Fragment(), View.OnTouchListener {
 
     override fun onTouch(v: View?, event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_DOWN) {
-            val tempSoundFile = (activity as MainActivity).getSoundFile(this.id)
-            if (soundFile != tempSoundFile){
-                soundFile = tempSoundFile
-                soundId = soundPool!!.load(soundFile?.absolutePath ?: "", 1)
-            }
-            streamId = soundPool.play(soundId, 1F, 1F, 0, -1, abs(roll))
+//            val tempSoundFile = (activity as MainActivity).getSoundFile(this.id)
+//            if (soundFile != tempSoundFile){
+//                soundFile = tempSoundFile
+//                soundId = soundPool!!.load(soundFile?.absolutePath ?: "", 1)
+//            }
+//            streamId = soundPool.play(soundId, 1F, 1F, 0, -1, abs(roll))
+            viewModel.playSound(1)
         }
         if(event.action ==MotionEvent.ACTION_UP){
-            soundPool.stop(streamId)
+//            soundPool.stop(streamId)
+            viewModel.pauseSound(1)
         }
         return true
     }

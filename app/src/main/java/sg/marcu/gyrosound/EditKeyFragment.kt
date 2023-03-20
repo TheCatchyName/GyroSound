@@ -23,6 +23,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -31,6 +32,7 @@ import kotlin.collections.HashMap
 
 class EditKeyFragment(private var keyId: Int, private var currSoundId: Int, private var soundFiles: HashMap<Int, File>) : Fragment() {
     private lateinit var spinnerAdapterInstance: ArrayAdapter<String>
+    private val viewModel: MainActivityViewModel by activityViewModels()
     lateinit var pickedSound: String
 
     private lateinit var recordButton: Button
@@ -87,6 +89,8 @@ class EditKeyFragment(private var keyId: Int, private var currSoundId: Int, priv
                         "keyId" to keyId,
                         "soundId" to p2
                     ))
+                    Log.d("spinner selected", "Set sound for button $keyId to $p2")
+                    viewModel.setSoundId(keyId, p2)
                 }
             }
         }

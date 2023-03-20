@@ -1,6 +1,9 @@
 package sg.marcu.gyrosound
 
+import android.media.AudioManager
+import android.media.SoundPool
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -8,9 +11,16 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import java.io.File
+import kotlin.math.*
 
 
-class KeyFragment : Fragment(), View.OnTouchListener {
+private lateinit var soundPool: SoundPool
+private var streamId = 0
+class KeyFragment: Fragment(), View.OnTouchListener {
+    // TODO: Rename and change types of parameters
+    private var soundId: Int = 0
+    private var soundFile: File? = null
     private val viewModel: MainActivityViewModel by activityViewModels()
     private var isPressed = false
 
@@ -36,38 +46,35 @@ class KeyFragment : Fragment(), View.OnTouchListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        soundFile = (activity as MainActivity).getSoundFile(this.id)
+
         val buttonPlay = requireActivity().findViewById<Button>(R.id.buttonPlay)
+        soundPool = SoundPool(6, AudioManager.STREAM_MUSIC, 0)
+        soundId = soundPool!!.load(soundFile?.absolutePath ?: "", 1)
         buttonPlay.setOnTouchListener(this)
     }
 
 
     override fun onTouch(v: View?, event: MotionEvent): Boolean {
-        if (isPressed) {
-            if (event.action == MotionEvent.ACTION_DOWN) {
-//                viewModel.playSound(1)
-//                v!!.findViewById<Button>(R.id.buttonPlay).text = "PRESSED"
-//            }
-//            if(event.getAction()==MotionEvent.ACTION_UP) {
-                viewModel.pauseSound(1)
-//                viewModel.toastSound()
-                v!!.findViewById<Button>(R.id.buttonPlay).text = "PRESS ME"
-                isPressed = false
+        if (event.getAction()== MotionEvent.ACTION_DOWN) {
+            val tempSoundFile = (activity as MainActivity).getSoundFile(this.id)
+            if (soundFile != tempSoundFile){
+                soundFile = tempSoundFile
+                soundId = soundPool!!.load(soundFile?.absolutePath ?: "", 1)
             }
-        } else {
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                viewModel.playSound(1)
-                v!!.findViewById<Button>(R.id.buttonPlay).text = "PRESSED"
-                isPressed = true
-            }
-//            if(event.getAction()==MotionEvent.ACTION_UP){
-//                viewModel.pauseSound(1)
-//                v!!.findViewById<Button>(R.id.buttonPlay).text = "PRESS ME"
-//            }
+            streamId = soundPool.play(soundId, 1F, 1F, 0, -1, abs(roll))
+        }
+        if(event.getAction()==MotionEvent.ACTION_UP){
+            soundPool.stop(streamId)
         }
         return true
     }
 
-
+    companion object {
+        fun newInstance(soundFile: File): KeyFragment {
+            return KeyFragment()
+        }
+    }
 
 //    companion object {
 //        /**

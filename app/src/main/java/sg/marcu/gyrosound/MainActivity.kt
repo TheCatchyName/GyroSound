@@ -1,11 +1,21 @@
 package sg.marcu.gyrosound
 
+import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
+import android.util.Log
+import android.view.View
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
+import java.io.File
+import java.io.FileOutputStream
+import kotlin.collections.HashMap
+import kotlin.properties.Delegates
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleOwner
@@ -26,9 +36,18 @@ private var pitch = 0.0f
 private var x = 0.0f
 private var y = 0.0f
 private var z = 0.0f
+private var base = 1.25f
+
+private var SOUND_1 = 0
+private var SOUND_2 = 1
+private var SOUND_3 = 2
+private var SOUND_4 = 3
 
 class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
     private val viewModel: MainActivityViewModel by viewModels()
+    private var sounds: HashMap<Int, File> = hashMapOf()
+    private var keySounds: HashMap<Int, Int> = hashMapOf()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -36,6 +55,41 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+
+        writeRawFileToExternal("key01.mp3", R.raw.key01)
+        writeRawFileToExternal("key02.mp3", R.raw.key02)
+        writeRawFileToExternal("violinc4.mp3", R.raw.violinc4)
+
+        /*
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.root_layout, KeyFragment.newInstance(sounds[SOUND_2]!!))
+            .commit()
+        */
+        supportFragmentManager.fragments.forEach {k ->
+            keySounds[k.id] = SOUND_2
+        }
+    }
+
+    fun writeRawFileToExternal(filename: String, rawFileID: Int) {
+        val audioDir = File(getExternalFilesDir(Environment.DIRECTORY_MUSIC), "AudioMemos")
+        audioDir.mkdirs()
+        val audioDirPath: String = audioDir.getAbsolutePath()
+        val recordingFile = File("$audioDirPath/$filename")
+
+        val outputStream = FileOutputStream(recordingFile)
+        val buffer = ByteArray(8192)
+        var length: Int
+        val fis = resources.openRawResource(rawFileID)
+
+        while (fis.read(buffer).also{length = it} > 0){
+            outputStream.write(buffer, 0, length)
+        }
+        outputStream.flush()
+        outputStream.close()
+        fis.close()
+
+        sounds[sounds.size] = recordingFile
     }
 
 
@@ -82,26 +136,20 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
     }
 
+    private val getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+        if (it.resultCode == RESULT_OK){
+            keySounds = it.data!!.getSerializableExtra("sounds") as HashMap<Int, Int>
+        }
+    }
 
-//    fun playSound(params: IntArray) {
-//        // action (1 is press, 0 is release), button number (1 to 8), sound to play (1 to x)
-//        val action = params[0]
-//        val buttonNum = params[1]
-//        val soundId = params[2]
-//
-//        if (action == 1) {
-//            val streamId = soundPool.play(soundId, 1F, 1F, 0, -1, 1f)
-//            buttonStreams[buttonNum] = streamId
-//        } else if (action == 0) {
-//            soundPool.stop(buttonStreams[buttonNum])
-//        }
-//    }
-//    fun changeSound() {
-//        for (i in 0..7) {
-//            if (buttonStreams[i] > 0) {
-//                soundPool.setRate(buttonStreams[i], base.pow(x))
-//            }
-//
-//        }
-//    }
+    fun goToEditMode(view: View) {
+        val it = Intent(this, EditSound::class.java)
+        it.putExtra("sounds", keySounds)
+        it.putExtra("soundFiles", sounds)
+        getResult.launch(it)
+    }
+
+    fun getSoundFile(id: Int): File? {
+        return sounds[keySounds[id]]
+    }
 }

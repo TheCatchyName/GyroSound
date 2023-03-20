@@ -4,19 +4,12 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.media.AudioManager
-import android.media.SoundPool
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MotionEvent
-import android.widget.Button
 import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.lifecycle.Lifecycle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
-import kotlin.math.pow
-import kotlin.properties.Delegates
+import kotlin.math.sqrt
 
 private lateinit var sensorManager: SensorManager
 private lateinit var gyroscope: Sensor
@@ -33,9 +26,6 @@ private var pitch = 0.0f
 private var x = 0.0f
 private var y = 0.0f
 private var z = 0.0f
-private lateinit var soundPool: SoundPool
-private var buttonStreams = IntArray(8)
-var base = 1.25f
 
 class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
     private val viewModel: MainActivityViewModel by viewModels()
@@ -46,12 +36,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
-//        soundPool = SoundPool(8, AudioManager.STREAM_MUSIC, 0)
-//        soundPool!!.load(applicationContext, R.raw.violinc4, 1)
-
-
-
-
     }
 
 
@@ -70,31 +54,28 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
 
     override fun onSensorChanged(event: SensorEvent?) {
         x = event!!.values[0]
-        y = event!!.values[1]
-        z = event!!.values[2]
+        y = event.values[1]
+        z = event.values[2]
 
-        val accel = Math.sqrt((x * x + y * y + z * z).toDouble()).toFloat()
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+        val accel = sqrt((x * x + y * y + z * z).toDouble()).toFloat()
+        if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
             mGravity = event.values
         }
 
-        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+        if (event.sensor.type == Sensor.TYPE_MAGNETIC_FIELD) {
             mGeomagnetic = event.values
         }
 
-        if (mGravity != null && mGeomagnetic != null) {
-
-            val success = SensorManager.getRotationMatrix(rotationMatrix, iMatrix, mGravity, mGeomagnetic);
-            if (success) {
-                SensorManager.getOrientation(rotationMatrix, orientation);
-                azimuth = orientation[0]
-                pitch = orientation[1]
-                roll = orientation[2]
-            }
+        val success = SensorManager.getRotationMatrix(rotationMatrix, iMatrix, mGravity, mGeomagnetic)
+        if (success) {
+            SensorManager.getOrientation(rotationMatrix, orientation)
+            azimuth = orientation[0]
+            pitch = orientation[1]
+            roll = orientation[2]
         }
 
         viewModel.changeFreq(roll)
-        findViewById<TextView>(R.id.gyroscopeDisplay)?.text = "X: $x\nY: $y\nZ: $z\nazimuth: $azimuth\npitch: $pitch\nroll: $roll"
+        findViewById<TextView>(R.id.gyroscopeDisplay)?.text = "X: $x\nY: $y\nZ: $z\nazimuth: $azimuth\npitch: $pitch\nroll: $roll\n accel: $accel"
 
     }
 

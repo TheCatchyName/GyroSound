@@ -19,6 +19,7 @@ import android.widget.*
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.getSystemService
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import kotlin.math.*
@@ -35,18 +36,18 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class KeyFragment : Fragment(), View.OnTouchListener {
-    private val viewModel: MainActivityViewModel by viewModels()
+    private val viewModel: MainActivityViewModel by activityViewModels()
     private var isPressed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.setSoundId(   1, 1)
-        viewModel.freq().observe( this, Observer {
-            view?.findViewById<TextView>(R.id.buttonFreqText)?.text  = it.toString()
+        viewModel.freq().observe( this
+
+        ) {
+            view?.findViewById<TextView>(R.id.buttonFreqText)?.text = it.toString()
 
         }
-
-        )
     }
 
     override fun onCreateView(
@@ -74,6 +75,7 @@ class KeyFragment : Fragment(), View.OnTouchListener {
 //            }
 //            if(event.getAction()==MotionEvent.ACTION_UP) {
                 viewModel.pauseSound(1)
+//                viewModel.toastSound()
                 v!!.findViewById<Button>(R.id.buttonPlay).text = "PRESS ME"
                 isPressed = false
             }

@@ -1,18 +1,17 @@
 package sg.marcu.gyrosound
 
-import android.media.AudioManager
 import android.media.SoundPool
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import java.io.File
-import kotlin.math.*
+import kotlin.math.abs
 
 
 private lateinit var soundPool: SoundPool
@@ -49,14 +48,13 @@ class KeyFragment: Fragment(), View.OnTouchListener {
         soundFile = (activity as MainActivity).getSoundFile(this.id)
 
         val buttonPlay = requireActivity().findViewById<Button>(R.id.buttonPlay)
-        soundPool = SoundPool(6, AudioManager.STREAM_MUSIC, 0)
-        soundId = soundPool!!.load(soundFile?.absolutePath ?: "", 1)
+//        soundId = soundPool!!.load(soundFile?.absolutePath ?: "", 1)
         buttonPlay.setOnTouchListener(this)
     }
 
 
     override fun onTouch(v: View?, event: MotionEvent): Boolean {
-        if (event.getAction()== MotionEvent.ACTION_DOWN) {
+        if (event.action == MotionEvent.ACTION_DOWN) {
             val tempSoundFile = (activity as MainActivity).getSoundFile(this.id)
             if (soundFile != tempSoundFile){
                 soundFile = tempSoundFile
@@ -64,7 +62,7 @@ class KeyFragment: Fragment(), View.OnTouchListener {
             }
             streamId = soundPool.play(soundId, 1F, 1F, 0, -1, abs(roll))
         }
-        if(event.getAction()==MotionEvent.ACTION_UP){
+        if(event.action ==MotionEvent.ACTION_UP){
             soundPool.stop(streamId)
         }
         return true

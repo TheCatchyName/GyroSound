@@ -5,20 +5,16 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
-import java.io.File
-import java.io.FileOutputStream
-import kotlin.collections.HashMap
-import kotlin.properties.Delegates
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleOwner
+import java.io.File
+import java.io.FileOutputStream
 import kotlin.math.sqrt
 
 private lateinit var sensorManager: SensorManager
@@ -30,7 +26,7 @@ private var iMatrix = FloatArray(9)
 private var orientation = FloatArray(3)
 private var mGeomagnetic = FloatArray(9)
 private var mGravity = FloatArray(9)
-private var roll = 0.0f
+var roll = 0.0f
 private var azimuth = 0.0f
 private var pitch = 0.0f
 private var x = 0.0f

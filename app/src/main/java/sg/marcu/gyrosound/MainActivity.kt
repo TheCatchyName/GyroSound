@@ -90,11 +90,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
                 azimuth = orientation[0]
                 pitch = orientation[1]
                 roll = orientation[2]
-                //call change sound
-//                changeSound()
             }
         }
 
+        viewModel.changeFreq(roll)
         findViewById<TextView>(R.id.gyroscopeDisplay)?.text = "X: $x\nY: $y\nZ: $z\nazimuth: $azimuth\npitch: $pitch\nroll: $roll"
 
     }
@@ -116,13 +115,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
 //            soundPool.stop(buttonStreams[buttonNum])
 //        }
 //    }
-    fun changeSound() {
-        return
+//    fun changeSound() {
 //        for (i in 0..7) {
 //            if (buttonStreams[i] > 0) {
 //                soundPool.setRate(buttonStreams[i], base.pow(x))
 //            }
 //
 //        }
-    }
+//    }
 }

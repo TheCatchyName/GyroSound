@@ -20,6 +20,7 @@ import androidx.activity.viewModels
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.getSystemService
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import kotlin.math.*
 import kotlin.properties.Delegates
 
@@ -35,17 +36,17 @@ private const val ARG_PARAM2 = "param2"
  */
 class KeyFragment : Fragment(), View.OnTouchListener {
     private val viewModel: MainActivityViewModel by viewModels()
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var isPressed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
         viewModel.setSoundId(   1, 1)
+        viewModel.freq().observe( this, Observer {
+            view?.findViewById<TextView>(R.id.buttonFreqText)?.text  = it.toString()
+
+        }
+
+        )
     }
 
     override fun onCreateView(
@@ -66,15 +67,26 @@ class KeyFragment : Fragment(), View.OnTouchListener {
 
     override fun onTouch(v: View?, event: MotionEvent): Boolean {
         var soundId = 1
-        if (event.getAction()== MotionEvent.ACTION_DOWN) {
-//            streamId = soundPool.play(soundId, 1F, 1F, 0, -1, 1f)
-            viewModel.playSound(1)
-            v!!.findViewById<Button>(R.id.buttonPlay).text = "PRESSED"
-        }
-        if(event.getAction()==MotionEvent.ACTION_UP){
-//            soundPool.stop(streamId)
-            viewModel.pauseSound(1)
-            v!!.findViewById<Button>(R.id.buttonPlay).text = "PRESS ME"
+        if (isPressed) {
+            if (event.getAction()== MotionEvent.ACTION_DOWN) {
+//                viewModel.playSound(1)
+//                v!!.findViewById<Button>(R.id.buttonPlay).text = "PRESSED"
+//            }
+//            if(event.getAction()==MotionEvent.ACTION_UP) {
+                viewModel.pauseSound(1)
+                v!!.findViewById<Button>(R.id.buttonPlay).text = "PRESS ME"
+                isPressed = false
+            }
+        } else {
+            if (event.getAction()== MotionEvent.ACTION_DOWN) {
+                viewModel.playSound(1)
+                v!!.findViewById<Button>(R.id.buttonPlay).text = "PRESSED"
+                isPressed = true
+            }
+//            if(event.getAction()==MotionEvent.ACTION_UP){
+//                viewModel.pauseSound(1)
+//                v!!.findViewById<Button>(R.id.buttonPlay).text = "PRESS ME"
+//            }
         }
         return true
     }

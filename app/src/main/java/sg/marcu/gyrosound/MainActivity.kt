@@ -33,7 +33,6 @@ private var x = 0.0f
 private var y = 0.0f
 private var z = 0.0f
 private var base = 1.25f
-var sounds: HashMap<Int, File> = hashMapOf() //maps soundid to soundfile
 
 private var SOUND_1 = 0
 private var SOUND_2 = 1
@@ -55,6 +54,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
         writeRawFileToExternal("key01.mp3", R.raw.key01)
         writeRawFileToExternal("key02.mp3", R.raw.key02)
         writeRawFileToExternal("violinc4.mp3", R.raw.violinc4)
+
+
 
         /*
         supportFragmentManager
@@ -85,7 +86,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
         outputStream.close()
         fis.close()
 
-        sounds[sounds.size] = recordingFile
+        viewModel.addSoundFile(recordingFile)
     }
 
 
@@ -140,12 +141,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
 
     fun goToEditMode(view: View) {
         val it = Intent(this, EditSound::class.java)
-        it.putExtra("sounds", keySounds)
-        it.putExtra("soundFiles", sounds)
+//        it.putExtra("sounds", keySounds)
+//        it.putExtra("soundFiles", sounds)
         getResult.launch(it)
     }
 
-    fun getSoundFile(id: Int): File? {
-        return sounds[keySounds[id]]
-    }
+//    fun getSoundFile(id: Int): File? {
+//        return sounds[keySounds[id]]
+//    }
 }

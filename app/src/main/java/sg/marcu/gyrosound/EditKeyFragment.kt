@@ -90,7 +90,7 @@ class EditKeyFragment(private var keyId: Int, private var currSoundId: Int, priv
                         "soundId" to p2
                     ))
                     Log.d("spinner selected", "Set sound for button $keyId to $p2")
-                    viewModel.setSoundId(keyId, p2)
+                    viewModel.setSelection(keyId, p2)
                 }
             }
         }

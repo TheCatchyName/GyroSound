@@ -11,18 +11,11 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import java.io.File
-import kotlin.math.abs
 
-
-private lateinit var soundPool: SoundPool
-private var streamId = 0
 class KeyFragment: Fragment(), View.OnTouchListener {
     // TODO: Rename and change types of parameters
     private val fragmentId = 0
-    private var soundId: Int = 0
-    private var soundFile: File? = null
     private val viewModel: MainActivityViewModel by activityViewModels()
-    private var isPressed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,39 +27,26 @@ class KeyFragment: Fragment(), View.OnTouchListener {
     ): View? {
         // Inflate the layout for this fragment
         viewModel.freq().observe( viewLifecycleOwner
-
         ) {
             view?.findViewById<TextView>(R.id.buttonFreqText)?.text = it.toString()
-
         }
         return inflater.inflate(R.layout.fragment_key, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-//        soundFile = (activity as MainActivity).getSoundFile(this.id)
-
         val buttonPlay = requireActivity().findViewById<Button>(R.id.buttonPlay)
-//        soundId = soundPool!!.load(soundFile?.absolutePath ?: "", 1)
+        viewModel.setSelection(fragmentId, 1)
         buttonPlay.setOnTouchListener(this)
     }
 
 
     override fun onTouch(v: View?, event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_DOWN) {
-//            val tempSoundFile = (activity as MainActivity).getSoundFile(this.id)
-//            if (soundFile != tempSoundFile){
-//                soundFile = tempSoundFile
-//                soundId = soundPool!!.load(soundFile?.absolutePath ?: "", 1)
-//            }
-//            streamId = soundPool.play(soundId, 1F, 1F, 0, -1, abs(roll))
-//            viewModel.setSoundId(fragmentId, 1)
             viewModel.playSound(fragmentId)
             activity?.findViewById<Button>(R.id.buttonPlay)?.text = "PRESSED"
         }
         if(event.action ==MotionEvent.ACTION_UP){
-//            soundPool.stop(streamId)
             viewModel.pauseSound(fragmentId)
             activity?.findViewById<Button>(R.id.buttonPlay)?.text = "PRESS ME"
         }

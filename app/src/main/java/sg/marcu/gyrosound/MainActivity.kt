@@ -34,11 +34,6 @@ private var y = 0.0f
 private var z = 0.0f
 private var base = 1.25f
 
-private var SOUND_1 = 0
-private var SOUND_2 = 1
-private var SOUND_3 = 2
-private var SOUND_4 = 3
-
 class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
     private val viewModel: MainActivityViewModel by viewModels()
     private var keySounds: HashMap<Int, Int> = hashMapOf() //maps button to value soundid
@@ -63,9 +58,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
             .add(R.id.root_layout, KeyFragment.newInstance(sounds[SOUND_2]!!))
             .commit()
         */
-        supportFragmentManager.fragments.forEach {k ->
-            keySounds[k.id] = SOUND_2
-        }
     }
 
     fun writeRawFileToExternal(filename: String, rawFileID: Int) {

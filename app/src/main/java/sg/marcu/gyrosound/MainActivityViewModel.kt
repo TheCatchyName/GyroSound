@@ -17,13 +17,17 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     private var streamIds = IntArray(8) // the streamid (any int) of button 1 to 8 (stream ids are generated dynamically)
     private var sounds: HashMap<Int, File> = hashMapOf<Int, File>() //maps soundid to soundfile
 
+    private var liveSounds = MutableLiveData<HashMap<Int,File>>()
+    private var liveSoundSelection: MutableLiveData<IntArray> = MutableLiveData<IntArray>()
+
     private var _freq = MutableLiveData<Float>() //global frequency modiifier according tto gyroscope
     private var baseVal = 1.25f
 
     fun addSoundFile(file: File ) {
         val newSoundId = soundPool.load(file.absolutePath ?: "", 1) // load the corresponding track
         sounds.set(newSoundId, file)
-
+        liveSounds.postValue(sounds)
+        DataRepository.getInstance().setLiveSounds(sounds)
         Log.d("sounds", "added file at ${file.absolutePath}")
     }
 
@@ -33,9 +37,12 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
     fun setSelection(buttonNum: Int, selectionNum: Int) {
         soundSelections[buttonNum] = selectionNum
+        DataRepository.getInstance().setSoundSelections(soundSelections)
     }
 
     fun playSound(buttonNum: Int) {
+        soundSelections = DataRepository.getInstance().getSoundSelection()
+
         val newStreamId = soundPool.play(soundSelections[buttonNum], 1F, 1F, 0, -1, _freq.value!!.toFloat())
         streamIds[buttonNum] = newStreamId
         Log.d("sounds", "playing: newStreamId: ${newStreamId}, buttonnnum: $buttonNum, soundid: ${soundSelections[buttonNum]}")
@@ -55,5 +62,13 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
+    fun getSoundFiles(): LiveData<HashMap<Int,File>> {
+        return DataRepository.getInstance().getLiveSounds()
+    }
 
+    fun getSoundSelected(buttonNum: Int) : Int {
+        soundSelections = DataRepository.getInstance().getSoundSelection()
+
+        return soundSelections[buttonNum]
+    }
 }

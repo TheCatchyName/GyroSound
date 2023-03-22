@@ -2,6 +2,7 @@ package sg.marcu.gyrosound
 
 import android.media.SoundPool
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -10,6 +11,8 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.viewModelFactory
 import java.io.File
 
 class KeyFragment: Fragment(), View.OnTouchListener {
@@ -19,6 +22,8 @@ class KeyFragment: Fragment(), View.OnTouchListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Log.d("CheckViewModel", "Key Fragment ${viewModel}")
     }
 
     override fun onCreateView(

@@ -30,10 +30,14 @@ import java.util.*
 import kotlin.collections.HashMap
 
 
-class EditKeyFragment(private var keyId: Int, private var currSoundId: Int, private var soundFiles: HashMap<Int, File>) : Fragment() {
+class EditKeyFragment() : Fragment() {
     private lateinit var spinnerAdapterInstance: ArrayAdapter<String>
     private val viewModel: MainActivityViewModel by activityViewModels()
     lateinit var pickedSound: String
+
+    private var soundFiles = hashMapOf<Int, File>()
+
+    private var buttonNum: Int = 0
 
     private lateinit var recordButton: Button
 
@@ -43,21 +47,11 @@ class EditKeyFragment(private var keyId: Int, private var currSoundId: Int, priv
     private var isRecording: Boolean = false
     private var recordingFile: File? = null
 
-    companion object {
-
-        fun newInstance(
-            keyId: Int,
-            currSoundName: Int,
-            soundFiles: HashMap<Int, File>,
-            toString: String
-        ): EditKeyFragment {
-            return EditKeyFragment(keyId, currSoundName, soundFiles)
-        }
-    }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Log.d("CheckViewModel", "EditKeyFragment ${viewModel}")
     }
 
     override fun onCreateView(
@@ -71,29 +65,15 @@ class EditKeyFragment(private var keyId: Int, private var currSoundId: Int, priv
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onStart() {
         super.onStart()
-        spinnerAdapterInstance = ArrayAdapter<String>(requireActivity().applicationContext, android.R.layout.simple_spinner_item, soundFiles.map{k -> k.value.toString().split("/")[k.value.toString().split("/").size - 1]})
-        val spinner = requireActivity().findViewById<Spinner>(R.id.sound_spinner)
-        spinner.adapter = spinnerAdapterInstance
 
-        spinner.setSelection(currSoundId)
+        buttonNum = (activity as EditSound).getButtonNum(this)
 
-        spinner.onItemSelectedListener = object: OnItemSelectedListener{
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                TODO("Not yet implemented")
-            }
+        //viewModel.addSoundFile(File("/storage"))
 
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                if (p0 !== null) {
-                    pickedSound = p0.getItemAtPosition(p2).toString()
-                    parentFragmentManager.setFragmentResult("requestKey", bundleOf(
-                        "keyId" to keyId,
-                        "soundId" to p2
-                    ))
-                    Log.d("spinner selected", "Set sound for button $keyId to $p2")
-                    viewModel.setSelection(keyId, p2)
-                }
-            }
-        }
+        viewModel.getSoundFiles().observe(viewLifecycleOwner, {
+            soundFiles = it
+            setSpinner()
+        })
 
         val audioDir = File(requireActivity().getExternalFilesDir(Environment.DIRECTORY_MUSIC), "AudioMemos")
         audioDir.mkdirs()
@@ -147,6 +127,27 @@ class EditKeyFragment(private var keyId: Int, private var currSoundId: Int, priv
             }
         } else {
             Log.d("TAG", "Permission failed")
+        }
+    }
+
+    fun setSpinner(){
+        spinnerAdapterInstance = ArrayAdapter<String>(requireActivity().applicationContext, android.R.layout.simple_spinner_item, soundFiles.map{k -> k.value.toString().split("/")[k.value.toString().split("/").size - 1]})
+        val spinner = requireActivity().findViewById<Spinner>(R.id.sound_spinner)
+        spinner.adapter = spinnerAdapterInstance
+
+        spinner.setSelection(viewModel.getSoundSelected(buttonNum) - 1)
+
+        spinner.onItemSelectedListener = object: OnItemSelectedListener{
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                if (p0 !== null) {
+                    pickedSound = p0.getItemAtPosition(p2).toString()
+                    viewModel.setSelection(buttonNum, p2 + 1)
+                }
+            }
         }
     }
 

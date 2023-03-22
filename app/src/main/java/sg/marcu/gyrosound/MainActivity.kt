@@ -7,6 +7,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
@@ -50,7 +51,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
         writeRawFileToExternal("key02.mp3", R.raw.key02)
         writeRawFileToExternal("violinc4.mp3", R.raw.violinc4)
 
-
+        Log.d("CheckViewModel", "Main Activity ${viewModel}")
 
         /*
         supportFragmentManager
@@ -127,14 +128,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
 
     private val getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
         if (it.resultCode == RESULT_OK){
-            keySounds = it.data!!.getSerializableExtra("sounds") as HashMap<Int, Int>
+            //keySounds = it.data!!.getSerializableExtra("sounds") as HashMap<Int, Int>
         }
     }
 
     fun goToEditMode(view: View) {
         val it = Intent(this, EditSound::class.java)
-//        it.putExtra("sounds", keySounds)
-//        it.putExtra("soundFiles", sounds)
         getResult.launch(it)
     }
 

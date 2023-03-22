@@ -7,6 +7,13 @@
     tools:context=".EditSound"
     android:orientation="vertical">
 
+    <fragment
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/edit_fragment_key_1"
+        android:name="sg.marcu.gyrosound.EditKeyFragment"
+        tools:layout="@layout/fragment_edit_key"/>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -9,6 +9,7 @@ class DataRepository{
     private var mLiveSounds = MutableLiveData<HashMap<Int, File>>()
     private var mSoundSelections = IntArray(8)
     private var mSoundStreams = IntArray(8)
+    private var mPitches = FloatArray(8)
 
     companion object {
         private var INSTANCE: DataRepository? = null
@@ -35,11 +36,20 @@ class DataRepository{
     fun getSoundSelection(): IntArray {
         return mSoundSelections
     }
+
     fun setStreamId(streamIds: IntArray) {
         mSoundStreams = streamIds
     }
 
     fun getStreamId(): IntArray {
         return mSoundStreams
+    }
+
+    fun setPitch(pitchArray: FloatArray) {
+        mPitches = pitchArray
+    }
+
+    fun getPitch(): FloatArray {
+        return mPitches
     }
 }

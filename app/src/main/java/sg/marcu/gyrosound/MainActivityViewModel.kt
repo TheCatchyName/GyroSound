@@ -3,6 +3,7 @@ package sg.marcu.gyrosound
 import android.app.Application
 import android.media.AudioManager
 import android.media.SoundPool
+import android.provider.ContactsContract.Data
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -42,15 +43,21 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
     fun playSound(buttonNum: Int) {
         soundSelections = DataRepository.getInstance().getSoundSelection()
-
-        val newStreamId = soundPool.play(soundSelections[buttonNum], 1F, 1F, 0, -1, _freq.value!!.toFloat())
-        streamIds[buttonNum] = newStreamId
-        Log.d("sounds", "playing: newStreamId: ${newStreamId}, buttonnnum: $buttonNum, soundid: ${soundSelections[buttonNum]}")
+        streamIds = DataRepository.getInstance().getStreamId()
+        if (streamIds[buttonNum] != 0) {
+            soundPool.resume(streamIds[buttonNum])
+            Log.d("sounds", "resume playing: stream: ${streamIds[buttonNum]}, buttonnnum: $buttonNum, soundid: ${soundSelections[buttonNum]}")
+        } else {
+            val newStreamId = soundPool.play(soundSelections[buttonNum], 1F, 1F, 0, -1, _freq.value!!.toFloat())
+            streamIds[buttonNum] = newStreamId
+            DataRepository.getInstance().setStreamId(streamIds)
+            Log.d("sounds", "created: newStreamId: ${newStreamId}, buttonnnum: $buttonNum, soundid: ${soundSelections[buttonNum]}")
+        }
     }
 
     fun pauseSound(buttonNum: Int) {
-        soundPool.stop(streamIds[buttonNum])
-        streamIds[buttonNum] = 0
+        soundPool.pause(streamIds[buttonNum])
+//        streamIds[buttonNum] = 0
     }
 
     fun changeFreq(newFreq: Float) {

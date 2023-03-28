@@ -58,15 +58,16 @@ class KeyFragment: Fragment(), View.OnTouchListener {
 
 
     override fun onTouch(v: View?, event: MotionEvent): Boolean {
-        val button = v as ImageButton
+        val button = v as Button
         val buttonId = button.tag.toString().toInt()
+        Log.d("sounds", "button {$buttonId} pressed")
         if (event.action == MotionEvent.ACTION_DOWN) {
             viewModel.playSound(buttonId)
-            activity?.findViewById<Button>(R.id.buttonPlay1)?.text = "PRESSED"
+            button.text = "PRESSED"
         }
         if(event.action ==MotionEvent.ACTION_UP){
             viewModel.pauseSound(buttonId)
-            activity?.findViewById<Button>(R.id.buttonPlay1)?.text = "PRESS ME"
+            button.text = "PRESS ME"
         }
         return true
     }

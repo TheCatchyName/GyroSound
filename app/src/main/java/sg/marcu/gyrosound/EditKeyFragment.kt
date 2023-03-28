@@ -21,13 +21,11 @@ import android.widget.Spinner
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import java.io.File
 import java.io.IOException
 import java.util.*
-import kotlin.collections.HashMap
 
 
 class EditKeyFragment() : Fragment() {
@@ -104,7 +102,7 @@ class EditKeyFragment() : Fragment() {
             ActivityCompat.requestPermissions(requireActivity(), permissions,0)
         }
 
-        recordButton = requireActivity().findViewById<Button>(R.id.record_button)
+        recordButton = requireActivity().findViewById<Button>(R.id.record_button0)
         recordButton.setOnClickListener{view: View -> recordAudio(view)}
     }
 
@@ -132,7 +130,7 @@ class EditKeyFragment() : Fragment() {
 
     fun setSpinner(){
         spinnerAdapterInstance = ArrayAdapter<String>(requireActivity().applicationContext, android.R.layout.simple_spinner_item, soundFiles.map{k -> k.value.toString().split("/")[k.value.toString().split("/").size - 1]})
-        val spinner = requireActivity().findViewById<Spinner>(R.id.sound_spinner)
+        val spinner = requireActivity().findViewById<Spinner>(R.id.sound_spinner0)
         spinner.adapter = spinnerAdapterInstance
 
         spinner.setSelection(viewModel.getSoundSelected(buttonNum) - 1)

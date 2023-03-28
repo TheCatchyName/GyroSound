@@ -46,22 +46,15 @@ class KeyFragment: Fragment(), View.OnTouchListener {
             }
         }
 
-        viewModel.setSelection(0, 1)
-        viewModel.setSelection(1, 1)
-        viewModel.setSelection(2, 1)
-        viewModel.setSelection(3, 1)
-        viewModel.setSelection(4, 3)
-        viewModel.setSelection(5, 3)
-        viewModel.setSelection(6, 3)
-        viewModel.setSelection(7, 3)
-        viewModel.setBaseFreq(0, 1.0f)
-        viewModel.setBaseFreq(1, 2.0f)
-        viewModel.setBaseFreq(2, 4.0f)
-        viewModel.setBaseFreq(3, 8.0f)
-        viewModel.setBaseFreq(4, 1.0f)
-        viewModel.setBaseFreq(5, 2.0f)
-        viewModel.setBaseFreq(6, 4.0f)
-        viewModel.setBaseFreq(7, 8.0f)
+//        viewModel.setSelection(0, 3)
+//        viewModel.setSelection(1, 3)
+//        viewModel.setSelection(2, 3)
+//        viewModel.setSelection(3, 3)
+//        viewModel.setSelection(4, 3)
+//        viewModel.setSelection(5, 3)
+//        viewModel.setSelection(6, 3)
+//        viewModel.setSelection(7, 3)
+//        viewModel.initBaseSemitones()
     }
 
 

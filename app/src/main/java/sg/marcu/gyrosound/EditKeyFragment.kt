@@ -13,12 +13,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
+import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.Spinner
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -35,7 +33,7 @@ class EditKeyFragment() : Fragment() {
 
     private var soundFiles = hashMapOf<Int, File>()
 
-    private var buttonNum: Int = 0
+//    private var buttonNum: Int = 0
 
     private lateinit var recordButton: Button
 
@@ -64,13 +62,13 @@ class EditKeyFragment() : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        buttonNum = (activity as EditSound).getButtonNum(this)
+//        buttonNum = (activity as EditSound).getButtonNum(this)
 
         //viewModel.addSoundFile(File("/storage"))
 
         viewModel.getSoundFiles().observe(viewLifecycleOwner, {
             soundFiles = it
-            setSpinner()
+            setAllButtons()
         })
 
         val audioDir = File(requireActivity().getExternalFilesDir(Environment.DIRECTORY_MUSIC), "AudioMemos")
@@ -128,9 +126,76 @@ class EditKeyFragment() : Fragment() {
         }
     }
 
-    fun setSpinner(){
+    fun setAllButtons() {
+
+        val tab = requireActivity().findViewById<TableLayout>(R.id.editTableLayout)
+        var buttonNum = 0
+        for (i in 0..tab.childCount - 1) {
+            val row = tab.getChildAt(i) as TableRow
+            for (j in 0..row.childCount - 1) {
+                val constraintLayout = row.getChildAt(j) as ConstraintLayout
+                val pitchSpinner = constraintLayout.getChildAt(1) as Spinner
+                setSemitoneSpinner(pitchSpinner, buttonNum)
+                val octaveSpinner = constraintLayout.getChildAt(2) as Spinner
+                setOctaveSpinner(octaveSpinner, buttonNum)
+                val soundSpinner = constraintLayout.getChildAt(3) as Spinner
+                setSoundSpinner(soundSpinner, buttonNum)
+                val recordButton = constraintLayout.getChildAt(4) as Button
+                buttonNum += 1
+            }
+        }
+
+    }
+
+    fun setSemitoneSpinner(spinner: Spinner, buttonNum: Int) {
+
+        spinnerAdapterInstance = ArrayAdapter<String>(requireActivity().applicationContext, android.R.layout.simple_spinner_item, arrayOf("-6","-5","-4","-3","-2","-1","0","+1","+2","+3","+4","+5","+6"))
+        spinner.adapter = spinnerAdapterInstance
+
+        val existingSelection = viewModel.getSelectedSemitone(buttonNum) //get the viewmodel's existing selection
+        spinner.setSelection(spinnerAdapterInstance.getPosition(existingSelection.toString())) //find the equivalent position on the spinner, then set it to the active selection
+
+        spinner.onItemSelectedListener = object: OnItemSelectedListener{
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                if (p0 !== null) {
+                    val pickedSemitone = p0.getItemAtPosition(p2).toString().toInt()
+                    viewModel.setSemitone(buttonNum, pickedSemitone)
+                }
+            }
+        }
+
+    }
+
+    fun setOctaveSpinner(spinner: Spinner, buttonNum: Int) {
+
+        spinnerAdapterInstance = ArrayAdapter<String>(requireActivity().applicationContext, android.R.layout.simple_spinner_item, arrayOf("-3","-2","-1","0","+1","+2","+3"))
+        spinner.adapter = spinnerAdapterInstance
+
+        val existingSelection = viewModel.getSelectedOctave(buttonNum) //get the viewmodel's existing selection
+        spinner.setSelection(spinnerAdapterInstance.getPosition(existingSelection.toString())) //find the equivalent position on the spinner, then set it to the active selection
+
+        spinner.onItemSelectedListener = object: OnItemSelectedListener{
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                if (p0 !== null) {
+                    val pickedOctave = p0.getItemAtPosition(p2).toString().toInt()
+                    viewModel.setOctave(buttonNum, pickedOctave)
+                }
+            }
+        }
+
+    }
+
+    fun setSoundSpinner(spinner: Spinner, buttonNum: Int){
         spinnerAdapterInstance = ArrayAdapter<String>(requireActivity().applicationContext, android.R.layout.simple_spinner_item, soundFiles.map{k -> k.value.toString().split("/")[k.value.toString().split("/").size - 1]})
-        val spinner = requireActivity().findViewById<Spinner>(R.id.sound_spinner0)
+//        val spinner = requireActivity().findViewById<Spinner>(R.id.sound_spinner0)
         spinner.adapter = spinnerAdapterInstance
 
         spinner.setSelection(viewModel.getSoundSelected(buttonNum) - 1)

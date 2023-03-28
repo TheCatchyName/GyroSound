@@ -53,6 +53,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
 
         Log.d("CheckViewModel", "Main Activity ${viewModel}")
 
+        viewModel.init()
+
         /*
         supportFragmentManager
             .beginTransaction()

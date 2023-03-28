@@ -9,6 +9,7 @@
     tools:context=".EditKeyFragment">
 
     <TableLayout
+        android:id="@+id/editTableLayout"
         android:layout_width="384dp"
         android:layout_height="601dp"
         android:layout_margin="10dp"
@@ -22,7 +23,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="191dp"
-                android:layout_height="130dp">
+                android:layout_height="150dp">
 
                 <TextView
                     android:id="@+id/textView0"
@@ -36,29 +37,42 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <Spinner
-                    android:id="@+id/sound_spinner0"
-                    android:layout_width="172dp"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="8dp"
-                    android:contentDescription="Recorded Sounds"
-                    android:tag="0"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.503"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView0" />
-
-                <Spinner
                     android:id="@+id/pitch_spinner0"
-                    android:layout_width="131dp"
-                    android:layout_height="19dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_width="108dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="12dp"
                     android:contentDescription="change pitch"
                     android:tag="0"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.411"
+                    app:layout_constraintHorizontal_bias="0.788"
                     app:layout_constraintStart_toEndOf="@+id/textView0"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="TouchTargetSizeCheck" />
+
+                <Spinner
+                    android:id="@+id/octave_spinner0"
+                    android:layout_width="107dp"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="40dp"
+                    android:contentDescription="change pitch"
+                    android:tag="0"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.892"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <Spinner
+                    android:id="@+id/sound_spinner0"
+                    android:layout_width="175dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="36dp"
+                    android:contentDescription="Recorded Sounds"
+                    android:tag="0"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.421"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView0" />
 
                 <Button
                     android:id="@+id/record_button0"
@@ -92,6 +106,32 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <Spinner
+                    android:id="@+id/pitch_spinner1"
+                    android:layout_width="53dp"
+                    android:layout_height="19dp"
+                    android:layout_marginTop="8dp"
+                    android:contentDescription="change pitch"
+                    android:tag="0"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.147"
+                    app:layout_constraintStart_toEndOf="@+id/textView1"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <Spinner
+                    android:id="@+id/octave_spinner1"
+                    android:layout_width="53dp"
+                    android:layout_height="19dp"
+                    android:layout_marginTop="8dp"
+                    android:contentDescription="change pitch"
+                    android:tag="0"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.411"
+                    app:layout_constraintStart_toEndOf="@id/pitch_spinner1"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <Spinner
                     android:id="@+id/sound_spinner1"
                     android:layout_width="172dp"
                     android:layout_height="48dp"
@@ -102,19 +142,6 @@
                     app:layout_constraintHorizontal_bias="0.503"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView1" />
-
-                <Spinner
-                    android:id="@+id/pitch_spinner1"
-                    android:layout_width="131dp"
-                    android:layout_height="19dp"
-                    android:layout_marginTop="8dp"
-                    android:contentDescription="change pitch"
-                    android:tag="0"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.411"
-                    app:layout_constraintStart_toEndOf="@+id/textView1"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="TouchTargetSizeCheck" />
 
                 <Button
                     android:id="@+id/record_button1"

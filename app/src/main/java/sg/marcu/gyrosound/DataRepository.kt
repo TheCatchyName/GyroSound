@@ -9,7 +9,8 @@ class DataRepository{
     private var mLiveSounds = MutableLiveData<HashMap<Int, File>>()
     private var mSoundSelections = IntArray(8)
     private var mSoundStreams = IntArray(8)
-    private var mPitches = FloatArray(8)
+    private var mSemitones = IntArray(8)
+    private var mOctaves = IntArray(8)
 
     companion object {
         private var INSTANCE: DataRepository? = null
@@ -45,11 +46,19 @@ class DataRepository{
         return mSoundStreams
     }
 
-    fun setPitch(pitchArray: FloatArray) {
-        mPitches = pitchArray
+    fun setSemitone(semitoneArray: IntArray) {
+        mSemitones = semitoneArray
     }
 
-    fun getPitch(): FloatArray {
-        return mPitches
+    fun getSemitone(): IntArray {
+        return mSemitones
+    }
+
+    fun setOctave(octaveArray: IntArray) {
+        mOctaves = octaveArray
+    }
+
+    fun getOctave(): IntArray {
+        return mOctaves
     }
 }

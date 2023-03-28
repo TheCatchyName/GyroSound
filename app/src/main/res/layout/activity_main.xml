@@ -10,7 +10,7 @@
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/pokedexFragment"
+        android:id="@+id/keysfragment"
         android:name="sg.marcu.gyrosound.KeyFragment"
         tools:layout="@layout/fragment_key"
         />
@@ -33,7 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="goToEditMode"
-        app:layout_constraintBottom_toBottomOf="@+id/pokedexFragment"
+        app:layout_constraintBottom_toBottomOf="@+id/keysfragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

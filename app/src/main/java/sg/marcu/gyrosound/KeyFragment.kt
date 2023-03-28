@@ -1,23 +1,18 @@
 package sg.marcu.gyrosound
 
-import android.media.SoundPool
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.viewModelFactory
 import java.io.File
 
 class KeyFragment: Fragment(), View.OnTouchListener {
     // TODO: Rename and change types of parameters
-    private val fragmentId = 0
     private val viewModel: MainActivityViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,20 +35,38 @@ class KeyFragment: Fragment(), View.OnTouchListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val buttonPlay = requireActivity().findViewById<Button>(R.id.buttonPlay)
-        viewModel.setSelection(fragmentId, 1)
-        buttonPlay.setOnTouchListener(this)
+        val buttonPlay = requireActivity().findViewById<Button>(R.id.buttonPlay1)
+
+        val tab = requireActivity().findViewById<TableLayout>(R.id.tableKeyLayout)
+        for (i in 0..tab.childCount - 1) {
+            val row = tab.getChildAt(i) as TableRow
+            for (j in 0..row.childCount - 1) {
+                val button = row.getChildAt(j) as Button
+                button.setOnTouchListener(this)
+            }
+        }
+
+        viewModel.setSelection(0, 1)
+        viewModel.setSelection(1, 2)
+        viewModel.setSelection(2, 3)
+        viewModel.setSelection(3, 1)
+        viewModel.setSelection(4, 2)
+        viewModel.setSelection(5, 3)
+        viewModel.setSelection(6, 1)
+        viewModel.setSelection(7, 2)
     }
 
 
     override fun onTouch(v: View?, event: MotionEvent): Boolean {
+        val button = v as ImageButton
+        val buttonId = button.tag.toString().toInt()
         if (event.action == MotionEvent.ACTION_DOWN) {
-            viewModel.playSound(fragmentId)
-            activity?.findViewById<Button>(R.id.buttonPlay)?.text = "PRESSED"
+            viewModel.playSound(buttonId)
+            activity?.findViewById<Button>(R.id.buttonPlay1)?.text = "PRESSED"
         }
         if(event.action ==MotionEvent.ACTION_UP){
-            viewModel.pauseSound(fragmentId)
-            activity?.findViewById<Button>(R.id.buttonPlay)?.text = "PRESS ME"
+            viewModel.pauseSound(buttonId)
+            activity?.findViewById<Button>(R.id.buttonPlay1)?.text = "PRESS ME"
         }
         return true
     }

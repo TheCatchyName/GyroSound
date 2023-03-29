@@ -26,7 +26,7 @@ import java.io.IOException
 import java.util.*
 
 
-class EditKeyFragment() : Fragment() {
+class EditKeyFragment() : Fragment(), View.OnClickListener {
     private lateinit var spinnerAdapterInstance: ArrayAdapter<String>
     private val viewModel: MainActivityViewModel by activityViewModels()
     lateinit var pickedSound: String
@@ -43,6 +43,8 @@ class EditKeyFragment() : Fragment() {
     private var isRecording: Boolean = false
     private var recordingFile: File? = null
 
+    private lateinit var audioDir: File
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +60,19 @@ class EditKeyFragment() : Fragment() {
         return inflater.inflate(R.layout.fragment_edit_key, container, false)
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val tab = requireActivity().findViewById<TableLayout>(R.id.editTableLayout)
+        for (i in 0..tab.childCount - 1) {
+            val row = tab.getChildAt(i) as TableRow
+            for (j in 0..row.childCount - 1) {
+                val button = (row.getChildAt(j) as ViewGroup).getChildAt(4)
+                button.setOnClickListener(this)
+            }
+        }
+    }
+
+
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onStart() {
         super.onStart()
@@ -71,7 +86,7 @@ class EditKeyFragment() : Fragment() {
             setAllButtons()
         })
 
-        val audioDir = File(requireActivity().getExternalFilesDir(Environment.DIRECTORY_MUSIC), "AudioMemos")
+        audioDir = File(requireActivity().getExternalFilesDir(Environment.DIRECTORY_MUSIC), "AudioMemos")
         audioDir.mkdirs()
         val audioDirPath: String = audioDir.getAbsolutePath()
         Log.d(TAG, "Recording file location: $audioDirPath")
@@ -100,8 +115,16 @@ class EditKeyFragment() : Fragment() {
             ActivityCompat.requestPermissions(requireActivity(), permissions,0)
         }
 
-        recordButton = requireActivity().findViewById<Button>(R.id.record_button0)
-        recordButton.setOnClickListener{view: View -> recordAudio(view)}
+        //recordButton = requireView().findViewById<Button>()
+        //recordButton.setOnClickListener{view: View -> recordAudio(view)}
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onClick(v: View) {
+        val button = v as Button
+        val buttonId = button.tag.toString().toInt()
+
+        recordAudio(v)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -214,7 +237,9 @@ class EditKeyFragment() : Fragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun recordAudio(view: View){
+        val recordButton = view as Button
         if (ContextCompat.checkSelfPermission(
                 requireActivity(),
                 Manifest.permission.RECORD_AUDIO
@@ -232,14 +257,27 @@ class EditKeyFragment() : Fragment() {
                 stopRecording()
                 recordButton.text = "Record"
                 isRecording = false
+                (activity as EditSound).updateViewModel()
             }
 
         }
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun startRecording(){
         Log.d("Recording Status", "Start Recording")
+
+        val audioDirPath: String = audioDir.getAbsolutePath()
+        Log.d(TAG, "Recording file location: $audioDirPath")
+
+        val currentTime: Date = Calendar.getInstance().getTime() // current time
+
+        val curTimeStr: String = currentTime.toString().replace(" ", "_")
+
+        recordingFile = File("$audioDirPath/$curTimeStr.mp3")
+
+        mediaRecorder?.setOutputFile(recordingFile)
 
         try {
             mediaRecorder?.prepare()

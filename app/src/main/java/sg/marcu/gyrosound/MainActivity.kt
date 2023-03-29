@@ -54,6 +54,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
         Log.d("CheckViewModel", "Main Activity ${viewModel}")
 
         viewModel.init()
+        updateViewModel()
 
         /*
         supportFragmentManager
@@ -81,7 +82,17 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
         outputStream.close()
         fis.close()
 
-        viewModel.addSoundFile(recordingFile)
+        //viewModel.addSoundFile(recordingFile)
+    }
+
+    fun updateViewModel(){
+        val audioDir = File(getExternalFilesDir(Environment.DIRECTORY_MUSIC), "AudioMemos")
+        audioDir.mkdirs()
+        val files = audioDir.listFiles()
+
+        for (file in files!!){
+            viewModel.addSoundFile(file)
+        }
     }
 
 

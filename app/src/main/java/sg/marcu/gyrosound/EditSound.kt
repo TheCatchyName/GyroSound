@@ -2,6 +2,7 @@ package sg.marcu.gyrosound
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -37,5 +38,15 @@ class EditSound : AppCompatActivity() {
 
     fun getButtonNum(editKeyFragment: EditKeyFragment): Int {
         return editFragmentIds[editKeyFragment.id]?: -1
+    }
+
+    fun updateViewModel(){
+        val audioDir = File(getExternalFilesDir(Environment.DIRECTORY_MUSIC), "AudioMemos")
+        audioDir.mkdirs()
+        val files = audioDir.listFiles()
+
+        for (file in files!!){
+            viewModel.addSoundFile(file)
+        }
     }
 }

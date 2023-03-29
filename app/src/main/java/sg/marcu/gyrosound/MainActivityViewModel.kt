@@ -28,11 +28,14 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     private var two = 2.0f
 
     fun addSoundFile(file: File ) {
-        val newSoundId = soundPool.load(file.absolutePath ?: "", 1) // load the corresponding track
-        sounds.set(newSoundId, file)
-        liveSounds.postValue(sounds)
-        DataRepository.getInstance().setLiveSounds(sounds)
-        Log.d("sounds", "added file at ${file.absolutePath}")
+        if (!sounds.values.contains(file)) {
+            val newSoundId =
+                soundPool.load(file.absolutePath ?: "", 1) // load the corresponding track
+            sounds.set(newSoundId, file)
+            liveSounds.postValue(sounds)
+            DataRepository.getInstance().setLiveSounds(sounds)
+            Log.d("sounds", "added file at ${file.absolutePath}")
+        }
     }
 
     fun freq() : LiveData<Float> {
@@ -40,8 +43,13 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun setSelection(buttonNum: Int, selectionNum: Int) {
+        if (soundSelections[buttonNum] == selectionNum){
+            return
+        }
         soundSelections[buttonNum] = selectionNum
+        streamIds[buttonNum] = 0
         DataRepository.getInstance().setSoundSelections(soundSelections)
+        DataRepository.getInstance().setStreamId(streamIds)
     }
 
     fun playSound(buttonNum: Int) {
@@ -52,7 +60,8 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         if (streamIds[buttonNum] != 0) {
             soundPool.resume(streamIds[buttonNum])
             Log.d("sounds", "resume playing: stream: ${streamIds[buttonNum]}, buttonnnum: $buttonNum, soundid: ${soundSelections[buttonNum]}")
-        } else {
+        }
+        else {
             val newStreamId = soundPool.play(soundSelections[buttonNum], 1F, 1F, 0, -1, baseVal.pow(_freq.value!!.toFloat()) * two.pow((semitone[buttonNum] + 12 * octave[buttonNum])/12))
             streamIds[buttonNum] = newStreamId
             DataRepository.getInstance().setStreamId(streamIds)
@@ -69,7 +78,15 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         _freq.value = newFreq
         semitone = DataRepository.getInstance().getSemitone()
         octave = DataRepository.getInstance().getOctave()
+        /*
         for (buttonNum in streamIds) { //iterate through all buttons and change their stream if it is not 0
+            if (streamIds[buttonNum] != 0) {
+                soundPool.setRate(streamIds[buttonNum], baseVal.pow(_freq.value!!.toFloat()) * two.pow((semitone[buttonNum] + 12 * octave[buttonNum])/12))
+            }
+        }
+        */
+        Log.d("sounds", "changeFreq")
+        for (buttonNum in 0 ..7){
             if (streamIds[buttonNum] != 0) {
                 soundPool.setRate(streamIds[buttonNum], baseVal.pow(_freq.value!!.toFloat()) * two.pow((semitone[buttonNum] + 12 * octave[buttonNum])/12))
             }

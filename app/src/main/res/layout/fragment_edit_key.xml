@@ -83,6 +83,7 @@
                     android:layout_marginRight="10dp"
                     android:tag="0"
                     android:text="Record"
+                    android:onClick="recordAudio"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.555"
                     app:layout_constraintStart_toStartOf="parent"

@@ -176,7 +176,7 @@ class EditKeyFragment() : Fragment(), View.OnClickListener {
         spinner.adapter = spinnerAdapterInstance
 
         val existingSelection = viewModel.getSelectedSemitone(buttonNum) //get the viewmodel's existing selection
-        spinner.setSelection(spinnerAdapterInstance.getPosition(existingSelection.toString())) //find the equivalent position on the spinner, then set it to the active selection
+        spinner.setSelection(spinnerAdapterInstance.getPosition(stringifyPitchSelection(existingSelection))) //find the equivalent position on the spinner, then set it to the active selection
 
         spinner.onItemSelectedListener = object: OnItemSelectedListener{
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -199,7 +199,7 @@ class EditKeyFragment() : Fragment(), View.OnClickListener {
         spinner.adapter = spinnerAdapterInstance
 
         val existingSelection = viewModel.getSelectedOctave(buttonNum) //get the viewmodel's existing selection
-        spinner.setSelection(spinnerAdapterInstance.getPosition(existingSelection.toString())) //find the equivalent position on the spinner, then set it to the active selection
+        spinner.setSelection(spinnerAdapterInstance.getPosition(stringifyPitchSelection(existingSelection))) //find the equivalent position on the spinner, then set it to the active selection
 
         spinner.onItemSelectedListener = object: OnItemSelectedListener{
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -214,6 +214,13 @@ class EditKeyFragment() : Fragment(), View.OnClickListener {
             }
         }
 
+    }
+
+    fun stringifyPitchSelection(pitch: Int): String{
+        if (pitch > 0){
+            return "+" + pitch.toString()
+        }
+        return pitch.toString()
     }
 
     fun setSoundSpinner(spinner: Spinner, buttonNum: Int){

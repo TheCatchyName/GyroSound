@@ -106,6 +106,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
     override fun onPause() {
         super.onPause()
         sensorManager.unregisterListener(this)
+    }
+
+    override fun onStop(){
+        super.onStop()
+        viewModel.updateData()
 
     }
 

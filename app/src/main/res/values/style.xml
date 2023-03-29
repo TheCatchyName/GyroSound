@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    </style>
+    <!-- Set parent theme as app theme. -->
+    <style name="RecordFragment">
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+</resources>

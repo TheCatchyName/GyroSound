@@ -70,6 +70,12 @@ class EditKeyFragment() : Fragment(), View.OnClickListener {
                 button.setOnClickListener(this)
             }
         }
+
+        val editSoundButton = requireView().findViewById<Button>(R.id.edit_sound_button)
+        editSoundButton.setOnClickListener{
+            val soundManagerFragment: SoundManagerFragment = SoundManagerFragment.getInstance()
+            soundManagerFragment.show(childFragmentManager, "signature")
+        }
     }
 
 
@@ -273,7 +279,7 @@ class EditKeyFragment() : Fragment(), View.OnClickListener {
                 recordButton.text = "Record"
                 isRecording = false
                 Log.d("sounds", "button tag ${view.tag}")
-                val recordFragment: RecordSound = RecordSound.getInstance(recordingFile, (view.tag).toString().toInt())
+                val recordFragment: RecordSoundFragment = RecordSoundFragment.getInstance(recordingFile, (view.tag).toString().toInt())
                 recordFragment.show(childFragmentManager, "signature")
                 //(activity as EditSound).updateViewModel()
             }

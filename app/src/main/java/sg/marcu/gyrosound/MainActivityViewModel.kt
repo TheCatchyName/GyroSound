@@ -39,6 +39,20 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
+    fun updateSounds(pSounds: HashMap<Int, File>){
+        sounds = pSounds
+        liveSounds.postValue(sounds)
+        DataRepository.getInstance().setLiveSounds(sounds)
+
+        var i = 0
+        for (sound in soundSelections){
+            if (!sounds.containsKey(sound)){
+                setSelection(i, sounds.keys.first())
+            }
+            i ++
+        }
+    }
+
     fun freq() : LiveData<Float> {
         return _freq
     }

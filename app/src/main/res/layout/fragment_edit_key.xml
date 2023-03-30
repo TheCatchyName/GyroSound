@@ -112,7 +112,7 @@
                     android:layout_height="19dp"
                     android:layout_marginTop="8dp"
                     android:contentDescription="change pitch"
-                    android:tag="0"
+                    android:tag="1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.147"
                     app:layout_constraintStart_toEndOf="@+id/textView1"
@@ -125,7 +125,7 @@
                     android:layout_height="19dp"
                     android:layout_marginTop="8dp"
                     android:contentDescription="change pitch"
-                    android:tag="0"
+                    android:tag="1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.411"
                     app:layout_constraintStart_toEndOf="@id/pitch_spinner1"
@@ -138,7 +138,7 @@
                     android:layout_height="48dp"
                     android:layout_marginTop="8dp"
                     android:contentDescription="Recorded Sounds"
-                    android:tag="0"
+                    android:tag="1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.503"
                     app:layout_constraintStart_toStartOf="parent"
@@ -151,7 +151,7 @@
                     android:layout_height="48dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:tag="0"
+                    android:tag="1"
                     android:text="Record"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.555"
@@ -161,19 +161,16 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="37dp" />
     </TableLayout>
+
+    <Button
+        android:id="@+id/edit_sound_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit Sounds"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTableLayout" />
 
     <FrameLayout
         android:id="@+id/record_fragment_container"

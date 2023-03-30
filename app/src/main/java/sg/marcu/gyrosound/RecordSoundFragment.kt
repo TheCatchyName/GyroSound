@@ -1,23 +1,18 @@
 package sg.marcu.gyrosound
 
-import android.content.ContentValues
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintSet.Motion
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import java.io.File
-import java.util.*
 
-class RecordSound(recordingFile: File?, buttonNum: Int) : DialogFragment() {
+class RecordSoundFragment(recordingFile: File?, buttonNum: Int) : DialogFragment() {
     private val viewModel: MainActivityViewModel by activityViewModels()
     private var recordingFile: File? = recordingFile
     private var buttonNum: Int = buttonNum
@@ -78,16 +73,16 @@ class RecordSound(recordingFile: File?, buttonNum: Int) : DialogFragment() {
     }
 
     companion object {
-        private var INSTANCE: RecordSound? = null
-        fun getInstance(recordingFile: File?, buttonNum: Int): RecordSound {
+        private var INSTANCE: RecordSoundFragment? = null
+        fun getInstance(recordingFile: File?, buttonNum: Int): RecordSoundFragment {
             if (INSTANCE == null) {
-                INSTANCE = RecordSound(recordingFile, buttonNum)
+                INSTANCE = RecordSoundFragment(recordingFile, buttonNum)
             }
             else{
                 INSTANCE!!.setRecordingFile(recordingFile)
                 INSTANCE!!.setButtonNum(buttonNum)
             }
-            return INSTANCE as RecordSound
+            return INSTANCE as RecordSoundFragment
         }
     }
 

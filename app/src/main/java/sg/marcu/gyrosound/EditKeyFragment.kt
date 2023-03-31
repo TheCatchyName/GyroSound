@@ -178,6 +178,8 @@ class EditKeyFragment() : Fragment(), View.OnClickListener {
                 val soundSpinner = constraintLayout.getChildAt(3) as Spinner
                 setSoundSpinner(soundSpinner, buttonNum)
                 val recordButton = constraintLayout.getChildAt(4) as Button
+                recordButton.setOnClickListener(this)
+
                 buttonNum += 1
             }
         }

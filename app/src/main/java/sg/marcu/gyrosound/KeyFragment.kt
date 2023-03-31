@@ -35,7 +35,6 @@ class KeyFragment: Fragment(), View.OnTouchListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val buttonPlay = requireActivity().findViewById<Button>(R.id.buttonPlay1)
 
         val tab = requireActivity().findViewById<TableLayout>(R.id.tableKeyLayout)
         for (i in 0..tab.childCount - 1) {
@@ -43,18 +42,10 @@ class KeyFragment: Fragment(), View.OnTouchListener {
             for (j in 0..row.childCount - 1) {
                 val button = row.getChildAt(j) as Button
                 button.setOnTouchListener(this)
+                button.text = "${viewModel.getButtonText(button.tag.toString().toInt())}"
             }
         }
 
-//        viewModel.setSelection(0, 3)
-//        viewModel.setSelection(1, 3)
-//        viewModel.setSelection(2, 3)
-//        viewModel.setSelection(3, 3)
-//        viewModel.setSelection(4, 3)
-//        viewModel.setSelection(5, 3)
-//        viewModel.setSelection(6, 3)
-//        viewModel.setSelection(7, 3)
-//        viewModel.initBaseSemitones()
     }
 
 
@@ -64,11 +55,11 @@ class KeyFragment: Fragment(), View.OnTouchListener {
         Log.d("sounds", "button {$buttonId} pressed")
         if (event.action == MotionEvent.ACTION_DOWN) {
             viewModel.playSound(buttonId)
-            button.text = "PRESSED"
+            button.text = "${viewModel.getButtonText(buttonId)} *"
         }
         if(event.action ==MotionEvent.ACTION_UP){
             viewModel.pauseSound(buttonId)
-            button.text = "PRESS ME"
+            button.text = "${viewModel.getButtonText(buttonId)}"
         }
         return true
     }

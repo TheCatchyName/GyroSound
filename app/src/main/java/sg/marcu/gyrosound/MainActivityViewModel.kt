@@ -189,4 +189,11 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             soundPool = DataRepository.getInstance().getSoundPool()!!
         }
     }
+
+    fun getButtonText(buttonNum: Int) : String {
+        val fileNames = DataRepository.getInstance().getSounds()
+        val fileNameIterator = fileNames.map{k -> k.value.toString().split("/")[k.value.toString().split("/").size - 1]}
+        val soundId = DataRepository.getInstance().getSoundSelection()[buttonNum]
+        return "${fileNameIterator[soundId - 1]}\nO: ${getSelectedOctave(buttonNum)} S: ${getSelectedSemitone(buttonNum)}"
+    }
 }

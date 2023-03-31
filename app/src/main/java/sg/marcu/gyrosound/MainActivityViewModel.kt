@@ -30,7 +30,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     fun addSoundFile(file: File ) {
         sounds = DataRepository.getInstance().getSounds()
         if (!sounds.values.contains(file)) {
-            val newSoundId =
+            var newSoundId =
                 soundPool.load(file.absolutePath ?: "", 1) // load the corresponding track
             sounds.set(newSoundId, file)
             liveSounds.postValue(sounds)
@@ -77,7 +77,10 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             Log.d("sounds", "resume playing: stream: ${streamIds[buttonNum]}, buttonnnum: $buttonNum, soundid: ${soundSelections[buttonNum]}")
         }
         else {
-            val newStreamId = soundPool.play(soundSelections[buttonNum], 1F, 1F, 0, -1, baseVal.pow(_freq.value!!.toFloat()) * two.pow((semitone[buttonNum] + 12 * octave[buttonNum])/12f))
+            var newStreamId = soundPool.play(soundSelections[buttonNum], 1F, 1F, 0, -1, baseVal.pow(_freq.value!!.toFloat()) * two.pow((semitone[buttonNum] + 12 * octave[buttonNum])/12f))
+            if (newStreamId == 0){
+                newStreamId = soundPool.play(soundSelections[buttonNum], 1F, 1F, 0, -1, baseVal.pow(_freq.value!!.toFloat()) * two.pow((semitone[buttonNum] + 12 * octave[buttonNum])/12f))
+            }
             streamIds[buttonNum] = newStreamId
             DataRepository.getInstance().setStreamId(streamIds)
             Log.d("sounds", "created: newStreamId: ${newStreamId}, buttonnnum: $buttonNum, soundid: ${soundSelections[buttonNum]}")
@@ -182,10 +185,13 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
     fun doUpdate(){
         if (DataRepository.getInstance().getSoundPool() == null){
+            Log.d("CheckViewModel", "ViewModel doUpdate() soundPool null")
             soundPool = SoundPool(8, AudioManager.STREAM_MUSIC, 0)
             DataRepository.getInstance().setSoundPool(soundPool)
+            soundPool.play(1, 0F, 0F, -1, -1, 1F)
         }
         else{
+            Log.d("CheckViewModel", "ViewModel doUpdate() soundPool")
             soundPool = DataRepository.getInstance().getSoundPool()!!
         }
     }
@@ -194,6 +200,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         val fileNames = DataRepository.getInstance().getSounds()
         val fileNameIterator = fileNames.map{k -> k.value.toString().split("/")[k.value.toString().split("/").size - 1]}
         val soundId = DataRepository.getInstance().getSoundSelection()[buttonNum]
+        Log.d("Sounds", "${fileNameIterator}: ${soundId}: ")
         return "${fileNameIterator[soundId - 1]}\nO: ${getSelectedOctave(buttonNum)} S: ${getSelectedSemitone(buttonNum)}"
     }
 }

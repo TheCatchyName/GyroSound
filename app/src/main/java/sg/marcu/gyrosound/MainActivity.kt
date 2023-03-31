@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
 
         Log.d("CheckViewModel", "Main Activity ${viewModel}")
 
-        viewModel.init()
+        viewModel.doUpdate()
         updateViewModel()
 
         /*

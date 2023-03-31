@@ -41,12 +41,33 @@ class KeyFragment: Fragment(), View.OnTouchListener {
             val row = tab.getChildAt(i) as TableRow
             for (j in 0..row.childCount - 1) {
                 val button = row.getChildAt(j) as Button
+                if (viewModel.getSoundSelected(button.tag.toString().toInt()) == 0){
+                    viewModel.setSelection(button.tag.toString().toInt(), 1)
+                }
+                button.text = viewModel.getButtonText(button.tag.toString().toInt())
+
                 button.setOnTouchListener(this)
-                button.text = "${viewModel.getButtonText(button.tag.toString().toInt())}"
             }
         }
 
     }
+
+    override fun onStart(){
+        super.onStart()
+        val tab = requireActivity().findViewById<TableLayout>(R.id.tableKeyLayout)
+        for (i in 0..tab.childCount - 1) {
+            val row = tab.getChildAt(i) as TableRow
+            for (j in 0..row.childCount - 1) {
+                val button = row.getChildAt(j) as Button
+                if (viewModel.getSoundSelected(button.tag.toString().toInt()) == 0){
+                    viewModel.setSelection(button.tag.toString().toInt(), 1)
+                }
+                button.text = viewModel.getButtonText(button.tag.toString().toInt())
+            }
+        }
+
+    }
+
 
 
     override fun onTouch(v: View?, event: MotionEvent): Boolean {

@@ -47,8 +47,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
 
-        writeRawFileToExternal("key01.mp3", R.raw.key01)
-        writeRawFileToExternal("key02.mp3", R.raw.key02)
+        writeRawFileToExternal("pianogmaj.mp3", R.raw.pianogmaj)
+        writeRawFileToExternal("trumpeta3.mp3", R.raw.trumpeta3)
         writeRawFileToExternal("violinc4.mp3", R.raw.violinc4)
 
         Log.d("CheckViewModel", "Main Activity ${viewModel}")

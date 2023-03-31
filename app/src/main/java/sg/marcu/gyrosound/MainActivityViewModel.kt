@@ -77,7 +77,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             Log.d("sounds", "resume playing: stream: ${streamIds[buttonNum]}, buttonnnum: $buttonNum, soundid: ${soundSelections[buttonNum]}")
         }
         else {
-            val newStreamId = soundPool.play(soundSelections[buttonNum], 1F, 1F, 0, -1, baseVal.pow(_freq.value!!.toFloat()) * two.pow((semitone[buttonNum] + 12 * octave[buttonNum])/12))
+            val newStreamId = soundPool.play(soundSelections[buttonNum], 1F, 1F, 0, -1, baseVal.pow(_freq.value!!.toFloat()) * two.pow((semitone[buttonNum] + 12 * octave[buttonNum])/12f))
             streamIds[buttonNum] = newStreamId
             DataRepository.getInstance().setStreamId(streamIds)
             Log.d("sounds", "created: newStreamId: ${newStreamId}, buttonnnum: $buttonNum, soundid: ${soundSelections[buttonNum]}")
@@ -119,7 +119,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         */
         for (buttonNum in 0 ..7){
             if (streamIds[buttonNum] != 0) {
-                soundPool.setRate(streamIds[buttonNum], baseVal.pow(_freq.value!!.toFloat()) * two.pow((semitone[buttonNum] + 12 * octave[buttonNum])/12))
+                soundPool.setRate(streamIds[buttonNum], baseVal.pow(_freq.value!!.toFloat()) * two.pow((semitone[buttonNum] + 12 * octave[buttonNum])/12f))
             }
         }
     }

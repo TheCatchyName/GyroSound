@@ -83,7 +83,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             }
             streamIds[buttonNum] = newStreamId
             DataRepository.getInstance().setStreamId(streamIds)
-            Log.d("sounds", "created: newStreamId: ${newStreamId}, buttonnnum: $buttonNum, soundid: ${soundSelections[buttonNum]}")
+            Log.d("sounds", "created: newStreamId: ${newStreamId}, buttonnnum: $buttonNum, soundid: ${soundSelections[buttonNum]}, octave: ${octave}")
         }
     }
 
@@ -188,7 +188,6 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             Log.d("CheckViewModel", "ViewModel doUpdate() soundPool null")
             soundPool = SoundPool(8, AudioManager.STREAM_MUSIC, 0)
             DataRepository.getInstance().setSoundPool(soundPool)
-            soundPool.play(1, 0F, 0F, -1, -1, 1F)
         }
         else{
             Log.d("CheckViewModel", "ViewModel doUpdate() soundPool")

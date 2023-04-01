@@ -17,22 +17,21 @@
 
     <TextView
         android:id="@+id/gyroscopeDisplay"
-        android:layout_width="238dp"
-        android:layout_height="132dp"
+        android:layout_width="371dp"
+        android:layout_height="194dp"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.405"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.835" />
+        app:layout_constraintVertical_bias="0.893" />
 
     <Button
         android:id="@+id/edit_button"
-        android:text="Edit Sound"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="goToEditMode"
+        android:text="Customise Buttons"
         app:layout_constraintBottom_toBottomOf="@+id/keysfragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

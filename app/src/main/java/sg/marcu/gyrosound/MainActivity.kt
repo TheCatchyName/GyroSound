@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
         }
 
         viewModel.changeFreq(roll)
-        findViewById<TextView>(R.id.gyroscopeDisplay)?.text = "X: $x\nY: $y\nZ: $z\nazimuth: $azimuth\npitch: $pitch\nroll: $roll\n accel: $accel"
+        findViewById<TextView>(R.id.gyroscopeDisplay)?.text = "X: $x\nY: $y\nZ: $z\nazimuth: $azimuth\npitch: $pitch\nroll: $roll\naccel: $accel"
 
     }
 

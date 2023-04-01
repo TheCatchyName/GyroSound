@@ -26,10 +26,10 @@ class KeyFragment: Fragment(), View.OnTouchListener {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        viewModel.freq().observe( viewLifecycleOwner
-        ) {
-            view?.findViewById<TextView>(R.id.buttonFreqText)?.text = it.toString()
-        }
+//        viewModel.freq().observe( viewLifecycleOwner
+//        ) {
+//            view?.findViewById<TextView>(R.id.buttonFreqText)?.text = it.toString()
+//        }
         return inflater.inflate(R.layout.fragment_key, container, false)
     }
 

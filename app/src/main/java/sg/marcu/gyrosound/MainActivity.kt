@@ -136,7 +136,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, LifecycleOwner {
             roll = orientation[2]
         }
 
-        viewModel.changeFreq(roll)
+        viewModel.changeFreq(pitch)
         findViewById<TextView>(R.id.gyroscopeDisplay)?.text = "X: $x\nY: $y\nZ: $z\nazimuth: $azimuth\npitch: $pitch\nroll: $roll\naccel: $accel"
 
     }
